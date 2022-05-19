@@ -90,12 +90,6 @@ namespace MetricsAgent.Controllers
         {
             return Ok();
         }
-        // c. api / metrics / network / from /{ fromTime}/ to /{ toTime}
-        [HttpGet("from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics(
-            [FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
-        {
-            return Ok();
-        }
+       
     }
 }

@@ -1,37 +1,47 @@
 using MetricsAgent.Controllers;
-using Microsoft.AspNetCore.Mvc;
+using MetricsAgent.Models;
+using MetricsAgent.Services;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using Xunit;
 
 namespace MetricsAgentTests
 {
-    public class DotNetAgentTests
+    public class DotNetMetricsAgentTests
     {
 
-        private DotNetMetricsController _dotNetMetricsController;
 
-        public DotNetAgentTests()
+        private DotNetMetricsController _dotNetMetricsController;
+        private Mock<IDotMetricsRepository> mock;
+
+
+        public DotNetMetricsAgentTests()
         {
-            _dotNetMetricsController = new DotNetMetricsController();
+            mock = new Mock<IDotMetricsRepository>();
+            var mockLogger = new Mock<ILogger<DotNetMetricsController>>();
+            _dotNetMetricsController = new DotNetMetricsController(mockLogger.Object, mock.Object);
         }
 
         [Fact]
-       
-            // TODO: Домашнее задание [Пункт 3]
-            //  Добавьте проект с тестами для агента сбора метрик. Напишите простые Unit-тесты на каждый
-            // метод отдельно взятого контроллера в обоих тестовых проектах.
-
-            // На данный момент можно просто воспользоваться заглушками (как в проекте MetricsManagerTests)
-
         public void GetMetricsFromAgent_ReturnOk()
         {
             TimeSpan fromTime = TimeSpan.FromSeconds(0);
             TimeSpan toTime = TimeSpan.FromSeconds(100);
+            mock.Setup(repository =>
+                    repository.Create(It.IsAny<DotMetric>())).Verifiable();
 
-            IActionResult result = _dotNetMetricsController.GetMetrics(fromTime, toTime);
-
-            Assert.IsAssignableFrom<IActionResult>(result);
-
+            // Выполняем действие на контроллере
+            var result = _dotNetMetricsController.Create(new
+            MetricsAgent.Models.Requests.DotMetricCreateRequest
+            {
+                Time = TimeSpan.FromSeconds(1),
+                Value = 50
+            });
+            // Проверяем заглушку на то, что пока работал контроллер
+            // Вызвался метод Create репозитория с нужным типом объекта в параметре
+            mock.Verify(repository => repository.Create(It.IsAny<DotMetric>()),
+            Times.AtMostOnce());
 
         }
     }
