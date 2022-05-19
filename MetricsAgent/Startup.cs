@@ -35,6 +35,10 @@ namespace MetricsAgent
             ConfigureSqlLiteConnection(services);
 
             services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddScoped<IDotMetricsRepository, DotMetricsRepository>();
+            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
             services.AddControllers()
                 .AddJsonOptions(options =>
                     options.JsonSerializerOptions.Converters.Add(new CustomTimeSpanConverter()));
@@ -72,6 +76,60 @@ namespace MetricsAgent
                 command.ExecuteNonQuery();
                 command.CommandText =
                     @"CREATE TABLE cpumetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+            using (var command = new SQLiteCommand(connection))
+            {
+                // Задаём новый текст команды для выполнения
+                // Удаляем таблицу с метриками, если она есть в базе данных
+                command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
+                // Отправляем запрос в базу данных
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE dotnetmetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+
+            using (var command = new SQLiteCommand(connection))
+            {
+                // Задаём новый текст команды для выполнения
+                // Удаляем таблицу с метриками, если она есть в базе данных
+                command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
+                // Отправляем запрос в базу данных
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE hddmetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+            using (var command = new SQLiteCommand(connection))
+            {
+                // Задаём новый текст команды для выполнения
+                // Удаляем таблицу с метриками, если она есть в базе данных
+                command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
+                // Отправляем запрос в базу данных
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE networkmetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+
+            using (var command = new SQLiteCommand(connection))
+            {
+                // Задаём новый текст команды для выполнения
+                // Удаляем таблицу с метриками, если она есть в базе данных
+                command.CommandText = "DROP TABLE IF EXISTS rammetrics";
+                // Отправляем запрос в базу данных
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE rammetrics(id INTEGER
                     PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();
