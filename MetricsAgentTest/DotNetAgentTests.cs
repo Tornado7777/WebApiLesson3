@@ -13,12 +13,12 @@ namespace MetricsAgentTests
 
 
         private DotNetMetricsController _dotNetMetricsController;
-        private Mock<IDotMetricsRepository> mock;
+        private Mock<IDotNetMetricsRepository> mock;
 
 
         public DotNetMetricsAgentTests()
         {
-            mock = new Mock<IDotMetricsRepository>();
+            mock = new Mock<IDotNetMetricsRepository>();
             var mockLogger = new Mock<ILogger<DotNetMetricsController>>();
             _dotNetMetricsController = new DotNetMetricsController(mockLogger.Object, mock.Object);
         }
@@ -29,18 +29,18 @@ namespace MetricsAgentTests
             TimeSpan fromTime = TimeSpan.FromSeconds(0);
             TimeSpan toTime = TimeSpan.FromSeconds(100);
             mock.Setup(repository =>
-                    repository.Create(It.IsAny<DotMetric>())).Verifiable();
+                    repository.Create(It.IsAny<DotNetMetric>())).Verifiable();
 
             // Выполняем действие на контроллере
             var result = _dotNetMetricsController.Create(new
-            MetricsAgent.Models.Requests.DotMetricCreateRequest
+            MetricsAgent.Models.Requests.DotNetMetricCreateRequest
             {
                 Time = TimeSpan.FromSeconds(1),
                 Value = 50
             });
             // Проверяем заглушку на то, что пока работал контроллер
             // Вызвался метод Create репозитория с нужным типом объекта в параметре
-            mock.Verify(repository => repository.Create(It.IsAny<DotMetric>()),
+            mock.Verify(repository => repository.Create(It.IsAny<DotNetMetric>()),
             Times.AtMostOnce());
 
         }

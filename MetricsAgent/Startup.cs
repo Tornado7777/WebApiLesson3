@@ -19,6 +19,7 @@ using NLog.Extensions.Logging;
 using MetricsAgent.Models;
 using MetricsAgent.Services.Impl;
 using AutoMapper;
+using MetricsAgent.Controllers;
 
 namespace MetricsAgent
 {
@@ -51,6 +52,30 @@ namespace MetricsAgent
                 {
                     Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
                 });
+
+            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>()
+               .Configure<DatabaseOptions>(options =>
+               {
+                   Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+               });
+
+            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>()
+              .Configure<DatabaseOptions>(options =>
+              {
+                  Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+              });
+
+            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>()
+              .Configure<DatabaseOptions>(options =>
+              {
+                  Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+              });
+
+            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>()
+              .Configure<DatabaseOptions>(options =>
+              {
+                  Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+              });
 
             services.AddTransient<SampleData>();
 
@@ -86,6 +111,49 @@ namespace MetricsAgent
                 command.ExecuteNonQuery();
                 command.CommandText =
                     @"CREATE TABLE cpumetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE dotnetmetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE hddmetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE networkmetrics(id INTEGER
+                    PRIMARY KEY,
+                    value INT, time INT)";
+                command.ExecuteNonQuery();
+            }
+
+            using (var command = new SQLiteCommand(connection))
+            {
+                command.CommandText = "DROP TABLE IF EXISTS rammetrics";
+                command.ExecuteNonQuery();
+                command.CommandText =
+                    @"CREATE TABLE rammetrics(id INTEGER
                     PRIMARY KEY,
                     value INT, time INT)";
                 command.ExecuteNonQuery();

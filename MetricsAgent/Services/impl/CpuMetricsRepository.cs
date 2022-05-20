@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using Microsoft.Extensions.Options;
+using MetricsAgent.Controllers;
 
 namespace MetricsAgent.Services.Impl
 {

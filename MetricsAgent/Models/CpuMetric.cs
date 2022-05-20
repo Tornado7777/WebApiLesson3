@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MetricsAgent.Models
+﻿namespace MetricsAgent.Models
 {
     public class CpuMetric
     {

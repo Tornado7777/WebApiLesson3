@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MetricsAgent.Services
@@ -6,6 +7,8 @@ namespace MetricsAgent.Services
     {
         IList<T> GetAll();
         T GetById(int id);
+        IList<T> GetByTimePeriod(TimeSpan timeFrom, TimeSpan timeTo);
+
         void Create(T item);
         void Update(T item);
         void Delete(int id);
