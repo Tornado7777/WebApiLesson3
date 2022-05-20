@@ -2,7 +2,7 @@
 
 namespace MetricsAgent.Models.Requests
 {
-    public class DotMetricCreateRequest
+    public class DotNetMetricCreateRequest
     {
         
             public TimeSpan Time { get; set; }
